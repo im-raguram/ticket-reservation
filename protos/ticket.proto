@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option go_package = "github.com/im-raguram/ticket-reservation/protos";
+
+package reservationapp;
+
+message PurchaseRequest {
+  string from = 1;
+  string to = 2;
+  User user = 3;
+  float price = 4;
+}
+
+message User {
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+}
+
+message PurchaseResponse {
+  string status = 1;
+  Seat seat = 2;
+}
+
+message Seat {
+  string section = 1;
+  int32 seatNumber = 2;
+}
+
+message SeatInfo {
+  PurchaseRequest ticket = 1;
+  Seat seat = 2;
+}
+
+message ModifySeatRequest {
+  string email = 1;
+  Seat newSeat = 2;
+}
+
+message SectionID {
+  string id = 1;
+}
+
+message Email {
+  string email = 1;
+}
+
+message Status {
+	string message = 1; 
+}
+
+service TicketService {
+  rpc PurchaseTicket(PurchaseRequest) returns (PurchaseResponse);
+  rpc ViewSeatBySection(SectionID) returns (stream SeatInfo);
+  rpc ViewSeatByEmail(Email) returns (SeatInfo);
+  rpc RemoveUser(Email) returns (Status);
+  rpc ModifySeat(ModifySeatRequest) returns (PurchaseResponse);
+}
